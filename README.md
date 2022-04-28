@@ -451,6 +451,7 @@ Refer to vim manual for their use.
 -   <kbd>C-w</kbd>
 -   <kbd>C-x</kbd>
 -   <kbd>C-y</kbd>
+-   <kbd>C-z</kbd>
 -   <kbd>C-]</kbd>
 -   <kbd>C-j</kbd>
 -   <kbd>C-k</kbd>
