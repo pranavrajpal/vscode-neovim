@@ -12,6 +12,8 @@ import {
     sendVSCodeKeysAtomic,
     getVScodeCursor,
     getNeovimCursor,
+    getVSCodeContent,
+    getCurrentBufferContents,
 } from "../utils";
 
 describe("Neovim external buffers", () => {
@@ -67,7 +69,19 @@ describe("Neovim external buffers", () => {
 
         const vscodeCursor = getVScodeCursor();
         const neovimCursor = await getNeovimCursor(client);
-        assert.ok(vscodeCursor[0] >= 189 && vscodeCursor[0] <= 191);
-        assert.ok(neovimCursor[0] >= 189 && neovimCursor[0] <= 191);
+
+        const cursorsEqual = vscodeCursor[0] === neovimCursor[0] && vscodeCursor[1] === neovimCursor[1];
+        assert.ok(cursorsEqual, "editor and neovim cursor out of sync");
+
+        // Text that we check for in order to see if the correct line is being shown
+        const expectedHelpText = "*local-options*";
+
+        const vscodeContent = getVSCodeContent();
+        const vscodeLine = vscodeCursor[0];
+        assert.ok(vscodeContent[vscodeLine].includes(expectedHelpText), "vscode cursor not at local-options help");
+
+        const neovimContent = await getCurrentBufferContents(client);
+        const neovimLine = neovimCursor[0];
+        assert.ok(neovimContent[neovimLine].includes(expectedHelpText), "neovim cursor not at local-options help");
     });
 });
